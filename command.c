@@ -210,7 +210,7 @@ exec_mca()
 	{
 	case A_F_SEARCH:
 	case A_B_SEARCH:
-		multi_search(cbuf, (int) number);
+		multi_search(cbuf, (int) number, 0);
 		break;
 #if HILITE_SEARCH
 	case A_FILTER:
@@ -613,6 +613,20 @@ mca_char(c)
 		return (MCA_DONE);
 	}
 
+	if (mca == A_F_SEARCH || mca == A_B_SEARCH)
+	{
+		/*
+		 * Special case for incremental search.
+		 * Run multi_search with incremental=1
+		 * and repaint prompt after each char in search.
+		 */
+		register char *cbuf;
+		cbuf = get_cmdbuf();
+		multi_search(cbuf, (int) number, 1);
+		mca_search();
+		cmd_putstr(cbuf);
+	}
+
 	/*
 	 * Need another character.
 	 */
@@ -863,9 +877,10 @@ ungetsc(s)
  * If SRCH_PAST_EOF is set, continue the search thru multiple files.
  */
 	static void
-multi_search(pattern, n)
+multi_search(pattern, n, incremental_mode)
 	char *pattern;
 	int n;
+	int incremental_mode;
 {
 	register int nomore;
 	IFILE save_ifile;
@@ -940,8 +955,10 @@ multi_search(pattern, n)
 	 * Didn't find it.
 	 * Print an error message if we haven't already.
 	 */
-	if (n > 0)
+	if (n > 0 && !incremental_mode)
+	{
 		error("Pattern not found", NULL_PARG);
+	}
 
 	if (changed_file)
 	{
@@ -1354,7 +1371,7 @@ commands()
 			if (number <= 0) number = 1;	\
 			mca_search();			\
 			cmd_exec();			\
-			multi_search((char *)NULL, (int) number);
+			multi_search((char *)NULL, (int) number, 0);
 
 
 		case A_F_SEARCH:
