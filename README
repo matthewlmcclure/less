@@ -1,3 +1,31 @@
+This git repo contains a patched version of the source code of version 444 of
+the venerable Unix less utility (not to be confused with the Less CSS
+preprocessor). 
+
+Don't use this unless you know what you are doing. Normally you should just use
+the version of less provided by your distro or in weird cases download the
+original source from this URL: 
+http://www.greenwoodsoftware.com/less/download.html#source
+
+Review the code if you have any concerns over what it will do to your system. 
+I don't warrant anything at all about this.
+
+The changes from the base code are trivial, only adding an 'incremental search'
+functionality after hitting / and before hitting enter. Behavior after hitting
+enter should be the same and little else, if anything, should be affected.
+
+This should be very easy to build if you have installed normal stuff like gcc,
+make, autoconf. Use the standard commands:
+
+    ./configure
+    make
+
+If you get a problem, make sure you have installed the core C build
+dependencies for your OS and run 'make clean'. Otherwise please write me
+with the full output you got from running "./configure && make".
+
+--- Original README follows ---
+
 
                             Less, version 444
 
