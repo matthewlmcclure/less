@@ -630,6 +630,7 @@ mca_char(c)
             jump_loc(searchstack[len_cmdbuf()], jump_sline);
             if (len_cmdbuf() == 0)
             {
+                undo_search();
                 mca_search();
                 return (MCA_MORE);
             }
