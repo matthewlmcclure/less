@@ -23,6 +23,7 @@
 
 extern int erase_char, erase2_char, kill_char;
 extern int sigs;
+extern int incremental_search;
 extern int quit_if_one_screen;
 extern int squished;
 extern int sc_width;
@@ -616,7 +617,7 @@ mca_char(c)
 		return (MCA_DONE);
 	}
 
-	if (mca == A_F_SEARCH || mca == A_B_SEARCH)
+	if (incremental_search && (mca == A_F_SEARCH || mca == A_B_SEARCH))
 	{
 		/*
 		 * Special case for incremental search.

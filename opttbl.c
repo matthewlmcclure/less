@@ -23,6 +23,7 @@ public int quiet;		/* Should we suppress the audible bell? */
 public int how_search;		/* Where should forward searches start? */
 public int top_scroll;		/* Repaint screen from top?
 				   (alternative is scroll from bottom) */
+public int incremental_search;	/* Search incrementally */
 public int pr_type;		/* Type of prompt (short, medium, long) */
 public int bs_mode;		/* How to process backspaces */
 public int know_dumb;		/* Don't complain about dumb terminals */
@@ -77,6 +78,7 @@ static struct optname F__optname     = { "quit-if-one-screen",   NULL };
 static struct optname g_optname      = { "hilite-search",        NULL };
 #endif
 static struct optname h_optname      = { "max-back-scroll",      NULL };
+static struct optname H__optname     = { "incremental-search",   NULL };
 static struct optname i_optname      = { "ignore-case",          NULL };
 static struct optname j_optname      = { "jump-target",          NULL };
 static struct optname J__optname     = { "status-column",        NULL };
@@ -225,6 +227,14 @@ static struct loption option[] =
 			NULL
 		}
 	},
+    { 'H', &H__optname,
+		BOOL, OPT_OFF, &incremental_search, NULL,
+    	{
+			"Search by pressing ENTER or RETURN",
+			"Search incrementally",
+			NULL
+		}
+    },
 	{ 'i', &i_optname,
 		TRIPLE|HL_REPAINT, OPT_OFF, &caseless, opt_i,
 		{
