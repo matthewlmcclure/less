@@ -68,6 +68,7 @@ static int optflag;
 static int optgetname;
 static POSITION bottompos;
 static int save_hshift;
+static POSITION searchstack[CMDBUF_SIZE];
 #if PIPEC
 static char pipec;
 #endif
@@ -524,6 +525,8 @@ mca_char(c)
 	int c;
 {
 	int ret;
+    register char *cbuf;
+    struct scrpos scrpos;
 
 	switch (mca)
 	{
@@ -620,11 +623,25 @@ mca_char(c)
 		 * Run multi_search with incremental=1
 		 * and repaint prompt after each char in search.
 		 */
-		register char *cbuf;
 		cbuf = get_cmdbuf();
-		multi_search(cbuf, (int) number, 1);
-		mca_search();
-		cmd_putstr(cbuf);
+        if (is_erase_char(c))
+        {
+            forw_prompt = 0;
+            jump_loc(searchstack[len_cmdbuf()], jump_sline);
+            if (len_cmdbuf() == 0)
+            {
+                mca_search();
+                return (MCA_MORE);
+            }
+        }
+        else
+        {
+            get_scrpos(&scrpos);
+            searchstack[len_cmdbuf()-1] = scrpos.pos;
+        }
+        multi_search(cbuf, (int) number, 1);
+        mca_search();
+        cmd_putstr(cbuf);
 	}
 
 	/*
