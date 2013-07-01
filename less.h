@@ -295,6 +295,15 @@ struct scrpos
 	int ln;
 };
 
+/*
+ * A mark is an ifile (input file) plus a position within the file.
+ */
+struct mark 
+{
+	IFILE m_ifile;
+	struct scrpos m_scrpos;
+};
+
 typedef union parg
 {
 	char *p_string;
